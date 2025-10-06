@@ -1,4 +1,4 @@
-package com.deepknow.goodeface.user;
+package com.deepknow.goodface.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
