@@ -42,7 +42,7 @@ public class LoginService {
             return u;
         });
         
-        // 确保时间字段不为null
+        // 确保所有时间字段都有值
         if (user.getCreatedAt() == null) {
             user.setCreatedAt(now);
         }

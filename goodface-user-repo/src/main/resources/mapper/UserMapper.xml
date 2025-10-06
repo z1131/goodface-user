@@ -32,7 +32,16 @@
     <!-- 保存用户（插入或更新） -->
     <insert id="save" parameterType="com.deepknow.goodface.user.repo.entity.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO users (phone, username, email, membership, balance, created_at, updated_at, last_login_at)
-        VALUES (#{phone}, #{username}, #{email}, #{membership}, #{balance}, #{createdAt}, #{updatedAt}, #{lastLoginAt})
+        VALUES (
+            #{phone}, 
+            #{username}, 
+            #{email}, 
+            #{membership}, 
+            #{balance}, 
+            COALESCE(#{createdAt}, NOW(6)), 
+            COALESCE(#{updatedAt}, NOW(6)), 
+            #{lastLoginAt}
+        )
         ON DUPLICATE KEY UPDATE
             username = VALUES(username),
             email = VALUES(email),
