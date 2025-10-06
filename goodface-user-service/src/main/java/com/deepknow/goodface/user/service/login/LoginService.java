@@ -1,6 +1,6 @@
 package com.deepknow.goodface.user.service.login;
 
-import com.deepknow.goodface.user.repo.UserRepository;
+import com.deepknow.goodface.user.repo.UserMapper;
 import com.deepknow.goodface.user.repo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class LoginService {
     private CodeStore codeStore;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserMapper userMapper;
 
     public CodeStore.SendResult sendCode(String phone) {
         return codeStore.generate(phone);
@@ -28,7 +28,8 @@ public class LoginService {
             return LoginResult.fail(msg);
         }
 
-        Optional<User> existed = userRepository.findByPhone(phone);
+        Instant now = Instant.now();
+        Optional<User> existed = userMapper.findByPhone(phone);
         User user = existed.orElseGet(() -> {
             User u = new User();
             u.setPhone(phone);
@@ -36,14 +37,19 @@ public class LoginService {
             u.setEmail("user" + tail(phone) + "@example.com");
             u.setMembership("普通用户");
             u.setBalance("0.00");
-            Instant now = Instant.now();
             u.setCreatedAt(now);
             u.setUpdatedAt(now);
             return u;
         });
-        user.setLastLoginAt(Instant.now());
-        user.setUpdatedAt(Instant.now());
-        userRepository.save(user);
+        
+        // 确保时间字段不为null
+        if (user.getCreatedAt() == null) {
+            user.setCreatedAt(now);
+        }
+        user.setLastLoginAt(now);
+        user.setUpdatedAt(now);
+        
+        userMapper.save(user);
 
         String token = "dev-token-" + UUID.randomUUID();
         return LoginResult.ok(token, user);

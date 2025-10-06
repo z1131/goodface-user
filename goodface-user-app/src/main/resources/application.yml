@@ -13,10 +13,13 @@ spring:
   redis:
     host: ${SPRING_REDIS_HOST:127.0.0.1}
     port: ${SPRING_REDIS_PORT:6379}
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.deepknow.goodface.user.repo.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 dubbo:
   application:
