@@ -1,0 +1,5 @@
+com/deepknow/goodface/user/service/login/CodeStore$CodeEntry.class
+com/deepknow/goodface/user/service/login/CodeStore$AttemptEntry.class
+com/deepknow/goodface/user/service/login/CodeStore$SendResult.class
+com/deepknow/goodface/user/service/login/CodeStore$VerifyResult.class
+com/deepknow/goodface/user/service/login/CodeStore.class
