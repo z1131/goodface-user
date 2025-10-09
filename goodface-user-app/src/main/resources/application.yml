@@ -1,5 +1,5 @@
 server:
-  port: ${SERVER_PORT:8082}
+  port: ${SERVER_PORT:8002}
 
 spring:
   application:
@@ -24,10 +24,13 @@ mybatis:
 dubbo:
   application:
     name: goodface-user
+    qos-enable: true
+    qos-port: 22223
   scan:
     base-packages: com.deepknow.goodface.user.service
   protocol:
     name: dubbo
+    port: 20881
   registry:
     address: ${DUBBO_REGISTRY_ADDRESS:nacos://127.0.0.1:8848}
     check: false
