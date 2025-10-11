@@ -15,5 +15,7 @@ public class LoginResponse implements Serializable {
     private String email;
     private String membership;
     private String balance;
+    // 标识是否为访客（未登录态）。前端可据此显示“未登录”。
+    private boolean guest;
 
 }
