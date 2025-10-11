@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.deepknow.goodface.user</groupId>
         <artifactId>goodface-user</artifactId>
-        <version>1.1.1</version>
+        <version>1.1.2</version>
     </parent>
 
     <artifactId>goodface-user-api</artifactId>
