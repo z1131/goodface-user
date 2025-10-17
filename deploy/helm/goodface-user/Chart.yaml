@@ -1,0 +1,6 @@
+apiVersion: v2
+name: goodface-user
+version: 1.0.0
+appVersion: 1.0.0
+description: GoodFace User Service Helm Chart
+type: application

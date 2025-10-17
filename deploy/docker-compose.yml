@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  goodface-user:
+    image: ${ACR_REGISTRY}/${ACR_NAMESPACE}/goodface-user:${IMAGE_TAG}
+    container_name: goodface-user
+    restart: always
+    ports:
+      - "8002:8002"       # HTTP 端口
+      - "20882:20882"     # Dubbo 端口
+      - "22222:22222"     # QoS 端口
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_REDIS_HOST=${SPRING_REDIS_HOST}
+      - SPRING_REDIS_PORT=${SPRING_REDIS_PORT}
+      - DUBBO_REGISTRY_ADDRESS=${DUBBO_REGISTRY_ADDRESS}
+    volumes:
+      - ./logs:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
