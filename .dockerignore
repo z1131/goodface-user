@@ -3,7 +3,8 @@
 .gitignore
 
 # Exclude all module build outputs except the app's executable jar
-**/target/*
+**/target/**
+!goodface-user-app/target/
 !goodface-user-app/target/*exec.jar
 
 # IDE configs
