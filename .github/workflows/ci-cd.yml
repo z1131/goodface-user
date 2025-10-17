@@ -18,7 +18,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B -U package --file 后端/goodface-user/pom.xml
+      working-directory: 后端/goodface-user
+      run: mvn -B -U package
 
   docker:
     needs: ci
@@ -34,7 +35,8 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build app jar (skip tests)
-      run: mvn -B -U -DskipTests package --file 后端/goodface-user/pom.xml
+      working-directory: 后端/goodface-user
+      run: mvn -B -U -DskipTests package
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
     - name: Set up Docker Buildx
