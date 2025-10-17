@@ -85,6 +85,7 @@ jobs:
         key: ${{ secrets.ECS_SSH_KEY }}
         source: "deploy/docker-compose.yml"
         target: "/opt/goodface-user/"
+        overwrite: true
 
     - name: Deploy to ECS via SSH
       uses: appleboy/ssh-action@v0.1.5
@@ -104,6 +105,7 @@ jobs:
           echo "SPRING_REDIS_HOST=${{ secrets.USER_SPRING_REDIS_HOST }}" >> .env
           echo "SPRING_REDIS_PORT=${{ secrets.USER_SPRING_REDIS_PORT }}" >> .env
           echo "DUBBO_REGISTRY_ADDRESS=${{ secrets.USER_DUBBO_REGISTRY_ADDRESS }}" >> .env
-          sudo docker login ${{ secrets.ACR_REGISTRY }} -u "${{ secrets.ACR_USERNAME }}" -p "${{ secrets.ACR_PASSWORD }}"
-          sudo docker compose --env-file .env pull
-          sudo docker compose --env-file .env up -d --remove-orphans
+          echo "${{ secrets.ACR_PASSWORD }}" | sudo docker login ${{ secrets.ACR_REGISTRY }} -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+          test -f docker-compose.yml || (echo "docker-compose.yml missing in $(pwd)" && ls -la && exit 1)
+          sudo docker compose -f docker-compose.yml --env-file .env pull
+          sudo docker compose -f docker-compose.yml --env-file .env up -d --remove-orphans
