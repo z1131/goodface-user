@@ -1,0 +1,15 @@
+# Exclude unnecessary files from the build context
+.git
+.gitignore
+
+# Exclude all module build outputs except the app's executable jar
+**/target/*
+!goodface-user-app/target/*exec.jar
+
+# IDE configs
+**/.idea
+**/.vscode
+**/*.iml
+
+# Deployment manifests not needed for image build
+deploy/
