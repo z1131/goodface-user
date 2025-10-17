@@ -67,6 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
+    - uses: actions/checkout@v3
     - name: Prepare remote directory
       uses: appleboy/ssh-action@v0.1.5
       with:
