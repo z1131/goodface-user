@@ -84,10 +84,9 @@ jobs:
         username: ${{ secrets.ECS_USER }}
         key: ${{ secrets.ECS_SSH_KEY }}
         source: "deploy/docker-compose.yml"
--       target: "/opt/goodface-user/docker-compose.yml"
-+       target: "/opt/goodface-user/"
+        target: "/opt/goodface-user/"
         overwrite: true
-+       strip_components: 1
+        strip_components: 1
 
     - name: Deploy to ECS via SSH
       uses: appleboy/ssh-action@v0.1.5
@@ -108,11 +107,8 @@ jobs:
           echo "SPRING_REDIS_PORT=${{ secrets.USER_SPRING_REDIS_PORT }}" >> .env
           echo "DUBBO_REGISTRY_ADDRESS=${{ secrets.USER_DUBBO_REGISTRY_ADDRESS }}" >> .env
           echo "${{ secrets.ACR_PASSWORD }}" | sudo docker login ${{ secrets.ACR_REGISTRY }} -u "${{ secrets.ACR_USERNAME }}" --password-stdin
-          -         test -f docker-compose.yml || (echo "docker-compose.yml missing in $(pwd)" && ls -la && exit 1)
-          -         sudo docker compose -f docker-compose.yml --env-file .env pull
-          -         sudo docker compose -f docker-compose.yml --env-file .env up -d --remove-orphans
-          +         CF="docker-compose.yml"
-          +         if [ ! -f "$CF" ] && [ -f "deploy/docker-compose.yml" ]; then CF="deploy/docker-compose.yml"; fi
-          +         test -f "$CF" || (echo "compose file missing in $(pwd)" && ls -la && exit 1)
-          +         sudo docker compose -f "$CF" --env-file .env pull
-          +         sudo docker compose -f "$CF" --env-file .env up -d --remove-orphans
+          CF="docker-compose.yml"
+          if [ ! -f "$CF" ] && [ -f "deploy/docker-compose.yml" ]; then CF="deploy/docker-compose.yml"; fi
+          test -f "$CF" || (echo "compose file missing in $(pwd)" && ls -la && exit 1)
+          sudo docker compose -f "$CF" --env-file .env pull
+          sudo docker compose -f "$CF" --env-file .env up -d --remove-orphans
