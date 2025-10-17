@@ -18,7 +18,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      working-directory: 后端/goodface-user
       run: mvn -B -U package
 
   docker:
@@ -35,7 +34,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build app jar (skip tests)
-      working-directory: 后端/goodface-user
       run: mvn -B -U -DskipTests package
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
@@ -55,8 +53,8 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
-        context: 后端/goodface-user
-        file: 后端/goodface-user/Dockerfile
+        context: .
+        file: Dockerfile
         platforms: linux/amd64,linux/arm64
         push: true
         tags: ${{ steps.meta.outputs.tags }}
