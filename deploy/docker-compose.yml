@@ -1,13 +1,10 @@
-version: '3.8'
 services:
   goodface-user:
     image: ${ACR_REGISTRY}/${ACR_NAMESPACE}/goodface-user:${IMAGE_TAG}
     container_name: goodface-user
     restart: always
     ports:
-      - "8002:8002"       # HTTP 端口
-      - "20882:20882"     # Dubbo 端口
-      - "22222:22222"     # QoS 端口
+      - "${USER_HTTP_PORT:-8002}:8002"       # HTTP 端口
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}

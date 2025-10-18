@@ -55,9 +55,9 @@ sudo mkdir -p /opt/goodface-user && cd /opt/goodface-user
 - `docker compose pull && docker compose up -d --remove-orphans`
 
 成功后，服务将以容器运行：
-- HTTP：`8002`
-- Dubbo：`20882`
-- QOS：`22222`
+- HTTP：`8002`（对外暴露）
+- Dubbo：`20882`（仅容器内部网络可访问，不映射到宿主机）
+- QOS：`22222`（仅容器内部网络可访问，不映射到宿主机）
 
 ## 使用 .env 管理运行时配置（不经 GitHub Secrets）
 如果你不想在 GitHub 配置数据库、Redis、Nacos 等运行参数，可在 ECS 上用 `.env` 文件集中管理：
