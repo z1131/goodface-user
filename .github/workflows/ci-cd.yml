@@ -97,16 +97,32 @@ jobs:
         script: |
           set -e
           cd /opt/goodface-user
+          # Prepare .env with fallbacks: prefer USER_* secrets, else generic SPRING_* ones
           echo "ACR_REGISTRY=${{ secrets.ACR_REGISTRY }}" > .env
           echo "ACR_NAMESPACE=${{ secrets.ACR_NAMESPACE }}" >> .env
           echo "IMAGE_TAG=${{ github.sha }}" >> .env
           echo "SPRING_PROFILES_ACTIVE=prod" >> .env
-          echo "SPRING_DATASOURCE_URL=${{ secrets.USER_SPRING_DATASOURCE_URL }}" >> .env
-          echo "SPRING_DATASOURCE_USERNAME=${{ secrets.USER_SPRING_DATASOURCE_USERNAME }}" >> .env
-          echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.USER_SPRING_DATASOURCE_PASSWORD }}" >> .env
-          echo "SPRING_REDIS_HOST=${{ secrets.USER_SPRING_REDIS_HOST }}" >> .env
-          echo "SPRING_REDIS_PORT=${{ secrets.USER_SPRING_REDIS_PORT }}" >> .env
-          echo "DUBBO_REGISTRY_ADDRESS=${{ secrets.USER_DUBBO_REGISTRY_ADDRESS }}" >> .env
+
+          SPRING_DATASOURCE_URL_VAL="${{ secrets.USER_SPRING_DATASOURCE_URL }}"
+          [ -z "$SPRING_DATASOURCE_URL_VAL" ] && SPRING_DATASOURCE_URL_VAL="${{ secrets.SPRING_DATASOURCE_URL }}"
+          SPRING_DATASOURCE_USERNAME_VAL="${{ secrets.USER_SPRING_DATASOURCE_USERNAME }}"
+          [ -z "$SPRING_DATASOURCE_USERNAME_VAL" ] && SPRING_DATASOURCE_USERNAME_VAL="${{ secrets.SPRING_DATASOURCE_USERNAME }}"
+          SPRING_DATASOURCE_PASSWORD_VAL="${{ secrets.USER_SPRING_DATASOURCE_PASSWORD }}"
+          [ -z "$SPRING_DATASOURCE_PASSWORD_VAL" ] && SPRING_DATASOURCE_PASSWORD_VAL="${{ secrets.SPRING_DATASOURCE_PASSWORD }}"
+          SPRING_REDIS_HOST_VAL="${{ secrets.USER_SPRING_REDIS_HOST }}"
+          [ -z "$SPRING_REDIS_HOST_VAL" ] && SPRING_REDIS_HOST_VAL="${{ secrets.SPRING_REDIS_HOST }}"
+          SPRING_REDIS_PORT_VAL="${{ secrets.USER_SPRING_REDIS_PORT }}"
+          [ -z "$SPRING_REDIS_PORT_VAL" ] && SPRING_REDIS_PORT_VAL="${{ secrets.SPRING_REDIS_PORT }}"
+          DUBBO_REGISTRY_ADDRESS_VAL="${{ secrets.USER_DUBBO_REGISTRY_ADDRESS }}"
+          [ -z "$DUBBO_REGISTRY_ADDRESS_VAL" ] && DUBBO_REGISTRY_ADDRESS_VAL="${{ secrets.DUBBO_REGISTRY_ADDRESS }}"
+
+          echo "SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL_VAL" >> .env
+          echo "SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME_VAL" >> .env
+          echo "SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD_VAL" >> .env
+          echo "SPRING_REDIS_HOST=$SPRING_REDIS_HOST_VAL" >> .env
+          echo "SPRING_REDIS_PORT=$SPRING_REDIS_PORT_VAL" >> .env
+          echo "DUBBO_REGISTRY_ADDRESS=$DUBBO_REGISTRY_ADDRESS_VAL" >> .env
+
           echo "${{ secrets.ACR_PASSWORD }}" | sudo docker login ${{ secrets.ACR_REGISTRY }} -u "${{ secrets.ACR_USERNAME }}" --password-stdin
           CF="docker-compose.yml"
           if [ ! -f "$CF" ] && [ -f "deploy/docker-compose.yml" ]; then CF="deploy/docker-compose.yml"; fi
