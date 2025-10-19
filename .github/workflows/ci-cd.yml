@@ -95,6 +95,7 @@ jobs:
         username: ${{ secrets.ECS_USER }}
         key: ${{ secrets.ECS_SSH_KEY }}
         script: |
+          set -e
           cd /opt/goodface-user
           echo "ACR_REGISTRY=${{ secrets.ACR_REGISTRY }}" > .env
           echo "ACR_NAMESPACE=${{ secrets.ACR_NAMESPACE }}" >> .env
@@ -112,3 +113,6 @@ jobs:
           test -f "$CF" || (echo "compose file missing in $(pwd)" && ls -la && exit 1)
           sudo docker compose -f "$CF" --env-file .env pull
           sudo docker compose -f "$CF" --env-file .env up -d --remove-orphans
+          # Ensure unified network exists and attach user container
+          sudo docker network ls | grep -q goodface-net || sudo docker network create goodface-net
+          sudo docker network connect goodface-net goodface-user || true
