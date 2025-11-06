@@ -49,12 +49,18 @@ dubbo:
   registry:
     address: ${DUBBO_REGISTRY_ADDRESS:nacos://mse-20c5ea40-nacos-ans.mse.aliyuncs.com:8848}
     check: false
+    timeout: 10000
     parameters:
       namespace: ${DUBBO_REGISTRY_NAMESPACE:65bc510a-166c-4a63-aad8-72fc931b14b7}
-      username: ${NACOS_USERNAME:nacos}
-      password: ${NACOS_PASSWORD:}
   config-center:
     check: false
+    timeout: 10000
+  consumer:
+    timeout: 10000
+    retries: 0
+  provider:
+    timeout: 10000
+    retries: 0
 
 management:
   endpoints:
@@ -73,3 +79,15 @@ logging:
   level:
     root: INFO
     org.apache.dubbo: INFO
+    com.alibaba.nacos: WARN
+
+# Nacos客户端优化配置
+nacos:
+  config:
+    retry: 3
+    config-retry-time: 3000
+    max-retry: 3
+  discovery:
+    retry: 3
+    timeout: 10000
+    heart-beat-timeout: 30000
